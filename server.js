@@ -1,10 +1,11 @@
+// INCLUDE PACKAGES NEEDED FOR THIS APPLICATION
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const cTable = require("console.table");
 
 // SET UP MYSQL CONNECTION
 
-// LEAVE EMPTY STRING FOR YOUR PW
+// Note - LEAVE EMPTY STRING FOR YOUR PW
 
 // MAKE CONNECTION
 
