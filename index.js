@@ -12,8 +12,10 @@ const connection = mysql.createConnection({
     database: 'employees_db',
 });
 
+
+
 // MAIN QUESTIONS
-const mainMenu = [
+const mainQuestions = [
     {
         name: "choice",
         type: 'list',
@@ -30,7 +32,7 @@ const mainMenu = [
     }
 ]
 
-// DEPARTMENT QUESTIONS
+// // DEPARTMENT QUESTIONS
 const depQuestions = [
     {
         name: 'newDepartment',
@@ -89,7 +91,7 @@ const empQuestions = [
     },
 ]
 
-// UPDATE QUESTIONS
+// // UPDATE QUESTIONS
 const updateQuestions = [
     {
         name: 'empID',
@@ -103,7 +105,40 @@ const updateQuestions = [
     },
 ]
 
-// VIEW ALL EMPLOYEES IN EMPLOYEE TABLE - DO THIS ONE FIRST, MAKE SURE IT WORKS, THEN DO THE REST
+const runSearch = () => {
+    return inquirer
+    .prompt(mainQuestions).then((data) => {
+        // SWITCH CASE FOR FIRST CHOICES
+        switch (data.choices) {
+            case "Add New Department":
+                addDepartment();
+                break;
+            case "Add New Role":
+                addRole();
+                break;
+            case "Add New Employee":
+                addEmployee();
+                break;
+            case "Update Employee's Job Title":
+                updateRole();
+                break;
+        //VIEW ALL DEPARTMENTS
+            case "View Departments":
+                db.query(`SELECT * FROM departments`, function (err,results) {
+                    console.table(results);
+                    runSearch();
+                });
+                break;
+
+
+        //VIEW ROLES
+            case "View Roles":
+
+        //VIEW EMPLOYEES
+            case "View Employees"
+        }
+    })
+}
 
 // ADD EMPLOYEE TO EMPLOYEE TABLE
 

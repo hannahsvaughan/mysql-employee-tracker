@@ -4,8 +4,8 @@ VALUES (newDepartment)
 
 -- ADD TO ROLE TABLE
 INSERT INTO role (title, salary, department_id)
-VALUES ()
+VALUES (newTitle, newSalary, newDepartmentId)
 
 -- ADD TO EMPLOYEE TABLE
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ()
+VALUES (newFirstName, newLastName, newRoleId, newManagerId)
