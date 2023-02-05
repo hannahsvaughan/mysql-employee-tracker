@@ -1,21 +1,21 @@
 // INCLUDE PACKAGES NEEDED FOR THIS APPLICATION
 const inquirer = require("inquirer");
-const mysql = require("mysql");
-const cTable = require("console.table");
+const mysql = require("mysql2");
+const cTable = require('console.table');
 
 // SET UP MYSQL CONNECTION
 const db = mysql.createConnection({
-    host: "localhost",
+    host: "127.0.0.1",
     user: "root",
     // Note - LEAVE EMPTY STRING FOR YOUR PW
-    password: ' ',
+    password: '',
     database: 'employees_db',
 },
     console.log(`Connected to the employees_db database.`)
 );
 
 // MAIN QUESTIONS
-const mainQuestions = [
+const startMenu = [
     {
         name: "choice",
         type: 'list',
@@ -27,7 +27,7 @@ const mainQuestions = [
             "Add New Department",
             "Add New Role",
             "Add New Employee",
-            "Update An Employee's Role"
+            // "Update An Employee's Role"
         ]
     }
 ]
@@ -35,8 +35,8 @@ const mainQuestions = [
 // DEPARTMENT QUESTION
 const depQuestions = [
     {
-        name: 'newDepartment',
         type: 'input',
+        name: 'newDepartment',
         message: "What is the new department name?"
     },
 ]
@@ -92,24 +92,24 @@ const empQuestions = [
 ]
 
 // // UPDATE QUESTIONS
-const updateQuestions = [
-    {
-        type: 'input',
-        name: 'empID',
-        message: "What is the employee's ID number?"
-    },
-    {
-        type: 'input',
-        name: 'updateRole',
-        message: "What is the employee's new job title?"
-    },
-]
+// const updateQuestions = [
+//     {
+//         type: 'input',
+//         name: 'empID',
+//         message: "What is the employee's ID number?"
+//     },
+//     {
+//         type: 'input',
+//         name: 'updateRole',
+//         message: "What is the employee's new job title?"
+//     },
+// ]
 
 const runSearch = () => {
     return inquirer
-        .prompt(mainQuestions).then((data) => {
+        .prompt(startMenu).then((data) => {
             // SWITCH CASE FOR FIRST CHOICES
-            switch (data.choices) {
+            switch (data.choice) {
                 case "Add New Department":
                     addDepartment();
                     break;
@@ -119,9 +119,9 @@ const runSearch = () => {
                 case "Add New Employee":
                     addEmployee();
                     break;
-                case "Update Employee's Job Title":
-                    updateRole();
-                    break;
+                // case "Update Employee's Job Title":
+                //     updateRole();
+                //     break;
                 // VIEW DEPARTMENT TABLE
                 case "View Departments":
                     db.query(`SELECT * FROM department`, function (err, results) {
@@ -152,9 +152,10 @@ const addEmployee = () => {
     return inquirer
         .prompt(empQuestions).then((data) => {
             db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${data.firstName}", "${data.lastName}", "${data.roleId}", "${data.managerId}")`, (err, results) => {
-                err
-                    ? console.log(err)
-                    : console.log(`${data.firstName} ${data.lastName} has been added to database.`)
+                if (err) {
+                    console.log(err)
+                } else
+                    console.log(`${data.firstName} ${data.lastName} has been added to database.`)
             });
             runSearch();
         })
@@ -165,39 +166,42 @@ const addRole = () => {
     return inquirer
         .prompt(roleQuestions).then((data) => {
             db.query(`INSERT INTO role (title, salary, department_id) VALUES ("${data.jobTitle}", "${data.roleSalary}", "${data.depId}")`, (err, result) => {
-                err
-                    ? console.log(err)
-                    : console.log(`${data.jobTitle} has been added to the database`)
+                if (err) {
+                    console.log(err)
+                } else
+                    console.log(`${data.jobTitle} has been added to the database`)
             });
             runSearch();
-        });
+        })
 }
 
 
 // ADD DEPARTMENT TO DEPARTMENT TABLE
 const addDepartment = () => {
     return inquirer
-    .prompt(depQuestions).then((data) => {
-        db.query(`INSERT INTO department(department_name) VALUES ("${data.newDepartment}")`, (err, result) => {
-            err
-            ? console.log(err)
-            : console.log(`${data.newDepartment} has been added to the database`)
-        });
-        runSearch();
-    })
+        .prompt(depQuestions).then((data) => {
+            db.query(`INSERT INTO department(department_name) VALUES ("${data.newDepartment}")`, (err, result) => {
+                if (err) {
+                    console.log(err)
+                } else
+                    console.log(`${data.newDepartment} has been added to the database`)
+            });
+            runSearch();
+        })
 }
 
-const updateRole = () => {
-    return inquirer
-    .prompt(updateQuestions).then((data) => {
-        db.query(`UPDATE employee SET job_title = "${data.updateRole}" WHERE id ="${data.empId}"`, (err, result) => {
-            err 
-            ? console.log(err)
-            : console.log('The new title ${data.updateRole} has been added to the database')
-        });
-        runSearch();
-    })
-}
+// const updateRole = () => {
+//     return inquirer
+//         .prompt(updateQuestions).then((data) => {
+//             db.query(`UPDATE employee SET job_title = "${data.updateRole}" WHERE id ="${data.empId}"`, (err, result) => {
+//                 if (err) {
+//                     console.log(err)
+//                 } else
+//                     console.log(`A new ${data.updateRole} has been added to the database`)
+//             });
+//             runSearch();
+//         })
+// }
 // INITIALIZE
 runSearch();
 
