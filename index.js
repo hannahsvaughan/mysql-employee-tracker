@@ -119,12 +119,15 @@ const runSearch = () => {
                 case "Add New Employee":
                     addEmployee();
                     break;
-                // case "Update Employee's Job Title":
-                //     updateRole();
-                //     break;
+                case "Update Employee's Job Title":
+                    updateRole();
+                    break;
                 // VIEW DEPARTMENT TABLE
                 case "View Departments":
                     db.query(`SELECT * FROM department`, function (err, results) {
+                        if (err) {
+                            console.log(err);
+                        } else 
                         console.table(results);
                         runSearch();
                     });
